@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MightX - Sistema de Indicação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos base e gradiente de fundo */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4b0082 0%, #00008b 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animação de partículas */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: moveParticle 10s infinite;
+        }
+
+        @keyframes moveParticle {
+            0% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(1);
+            }
+            100% {
+                transform: translate(calc(var(--x) + var(--dx) * 2), calc(var(--y) + var(--dy) * 2)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Botão estilizado */
+        .mightx-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background-color: #000080;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 20px #00f;
+            transition: all 0.3s ease;
+        }
+
+        .mightx-btn:hover {
+            background-color: #0000a0;
+            box-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 40px #00f, 0 0 80px #00f;
+            transform: translateY(-2px);
+        }
+
+        /* Otimização para dispositivos móveis */
+        .card {
+            background: #222;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        input, button {
+            width: 90%;
+            box-sizing: border-box;
+        }
+        
+        .tabs {
+            flex-direction: row;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab-btn {
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Estilos do seu código original */
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            transition: 0.3s;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .msg {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: #333;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .codigo-box {
+            margin-top: 10px;
+            background: #333;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="https://www.mightx.com.br" class="mightx-btn">Tela Inicial</a>
+
+    <div class="particles" id="particles-js"></div>
+
+    <div class="card">
+        <h2>MightX Indicações</h2>
+
+        <div class="tabs">
+            <div id="tabRegistrarBtn" class="tab-btn active" onclick="mudarAba('registrar')">Registrar</div>
+            <div id="tabReivindicarBtn" class="tab-btn" onclick="mudarAba('reivindicar')">Reivindicar</div>
+        </div>
+
+        <div id="registrar" class="tab-content active">
+            <input type="text" id="nome" placeholder="Nome completo">
+            <input type="text" id="instagram" placeholder="@instagram">
+            <button onclick="registrarCodigo()">Gerar Código</button>
+            <div id="mensagemRegistrar" class="msg"></div>
+            <div id="codigoBox" class="codigo-box" style="display:none;">
+                <span id="codigoGerado"></span><br>
+                <button onclick="copiarCodigo()">Copiar Código</button>
+                <p id="msgCopiar" style="font-size:0.9rem; margin-top:5px;"></p>
+            </div>
+        </div>
+
+        <div id="reivindicar" class="tab-content">
+            <input type="text" id="codigoReivindicar" placeholder="Código de indicação">
+            <input type="text" id="instagramReivindicar" placeholder="Seu @instagram">
+            <button onclick="reivindicarCodigo()">Validar</button>
+            <div id="mensagemReivindicar" class="msg"></div>
+        </div>
+    </div>
+
+    <script>
+        // URL do seu backend. Se estiver rodando no seu computador, é 127.0.0.1
+        const API_URL = "http://127.0.0.1:5000";
+
+        // --- Alternar abas (código original mantido) ---
+        function mudarAba(aba) {
+            document.querySelectorAll(".tab-content").forEach(div => div.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.getElementById(aba).classList.add("active");
+            document.getElementById("tab" + aba.charAt(0).toUpperCase() + aba.slice(1) + "Btn").classList.add("active");
+        }
+
+        // --- Função para registrar código (NOVO) ---
+        async function registrarCodigo() {
+            const nome = document.getElementById("nome").value.trim();
+            const insta = document.getElementById("instagram").value.trim();
+            const msg = document.getElementById("mensagemRegistrar");
+            const codigoBox = document.getElementById("codigoBox");
+            const codigoSpan = document.getElementById("codigoGerado");
+
+            if (!nome || !insta) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Preencha todos os campos.";
+                codigoBox.style.display = "none";
+                return;
+            }
+
+            // A lógica de geração de código é mantida no frontend para mostrar o código
+            const primeiroNome = nome.split(" ")[0].toUpperCase();
+            const aleatorio = Math.floor(100 + Math.random() * 900);
+            const codigo = `MIGHTX-${primeiroNome}-${aleatorio}`;
+
+            try {
+                const response = await fetch(`${API_URL}/registrar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, instagram: insta, codigo })
+                });
+                const result = await response.json();
+
+                if (response.ok) { // Verifica se a resposta foi bem-sucedida (código 200-299)
+                    msg.style.color = "lime";
+                    msg.innerText = "✅ Código gerado com sucesso!";
+                    codigoSpan.innerText = codigo;
+                    codigoBox.style.display = "block";
+                } else {
+                    msg.style.color = "red";
+                    msg.innerText = `❌ ${result.message}`;
+                    codigoBox.style.display = "none";
+                }
+            } catch (error) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+                codigoBox.style.display = "none";
+            }
+        }
+
+        // --- Função para copiar código (mantida) ---
+        function copiarCodigo() {
+            const codigo = document.getElementById("codigoGerado").innerText;
+            const msgCopiar = document.getElementById("msgCopiar");
+
+            navigator.clipboard.writeText(codigo).then(() => {
+                msgCopiar.style.color = "lime";
+                msgCopiar.innerText = "📋 Código copiado!";
+            }).catch(() => {
+                msgCopiar.style.color = "red";
+                msgCopiar.innerText = "❌ Erro ao copiar!";
+            });
+        }
+
+        // --- Função para reivindicar código (NOVO) ---
+        async function reivindicarCodigo() {
+            const codigo = document.getElementById("codigoReivindicar").value.trim();
+            const instaReivindicador = document.getElementById("instagramReivindicar").value.trim();
+            const msg = document.getElementById("mensagemReivindicar");
+
+            if (!codigo || !instaReivindicador) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Preencha todos os campos.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/reivindicar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo, instagramReivindicador: instaReivindicador })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    msg.style.color = "lime";
+                    msg.innerText = `✅ ${result.message}`;
+                } else {
+                    msg.style.color = "red";
+                    msg.innerText = `❌ ${result.message}`;
+                }
+            } catch (error) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+            }
+        }
+
+        // --- Gerador de partículas (mantido) ---
+        function createParticles() {
+            const container = document.getElementById('particles-js');
+            const numParticles = 50;
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                particle.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--dx', `${Math.random() * 100 - 50}px`);
+                particle.style.setProperty('--dy', `${Math.random() * 100 - 50}px`);
+                container.appendChild(particle);
+            }
+        }
+        window.onload = createParticles;
+    </script>
+</body>
+</html>
