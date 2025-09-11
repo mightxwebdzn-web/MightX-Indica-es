@@ -3,424 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MightX Ascensão Digital & Criativa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://github.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/raw/main/icon.png">
+    <title>MightX Indicações</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-        :root {
-            --bg-color: #000;
-            --text-color: #fff;
-            --section-bg: #1a1a1a;
-            --card-bg: rgba(255,255,255,.06);
-            --menu-bg: rgba(255,255,255,.1);
-            --border-color: rgba(255,255,255,.2);
-        }
-        body.light-mode {
-            --bg-color: #f5f5f5;
-            --text-color: #333;
-            --section-bg: #e0e0e0;
-            --card-bg: rgba(0,0,0,.06);
-            --menu-bg: rgba(0,0,0,.1);
-            --border-color: rgba(0,0,0,.2);
-        }
-        body{background:var(--bg-color);color:var(--text-color);overflow-x:hidden;transition:background 0.3s ease, color 0.3s ease}
-        .gradient-title{background:linear-gradient(90deg,#6a00f4,#00ddeb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .scroll-reveal{opacity:0;transform:translateY(50px);transition:all .8s ease-out}
-        .scroll-reveal.active{opacity:1;transform:translateY(0)}
-        #banner{height:100vh;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url('https://github.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/raw/main/wallpaper.png') center/cover no-repeat;display:flex;align-items:center;padding:0 5%}
-        #banner .content{max-width:600px}
-        #banner h1{font-size:3rem;font-weight:700;line-height:1.2;color:#fff} /* Texto sempre branco */
-        #banner p{font-size:1.2rem;margin-top:20px;font-weight:300;color:#fff} /* Texto sempre branco */
-        .menu-button{position:fixed;top:20px;left:20px;z-index:1000;display:flex;align-items:center}
-        .menu-button img{width:50px;cursor:pointer;transition:transform .3s;margin-right:10px}
-        .menu-button img:hover{transform:scale(1.1)}
-        .menu-options{display:none;flex-direction:row;gap:10px}
-        .menu-options.active{display:flex}
-        .menu-options a{width:50px;height:50px;background:var(--menu-bg);backdrop-filter:blur(10px);border:1px solid var(--border-color);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .3s}
-        .menu-options a:hover{transform:scale(1.15)}
-        /* Ícones do menu em branco */
-        .menu-options a i{color:var(--text-color);font-size:1.2rem}
-        .whatsapp-button{position:fixed;bottom:20px;right:20px;z-index:1000;background:#25D366;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px #25D366,0 0 30px #25D366;animation:neon 1.5s ease-in-out infinite alternate;text-decoration:none}
-        @keyframes neon{from{box-shadow:0 0 10px #25D366,0 0 20px #25D366}to{box-shadow:0 0 20px #25D366,0 0 40px #25D366}}
-        .whatsapp-button i{font-size:2rem;color:#fff}
-        .card{position:relative;background:var(--card-bg);backdrop-filter:blur(10px);border-radius:15px;padding:20px;transition:transform .3s;text-align:center;overflow:hidden}
-        .card::before{content:'';position:absolute;inset:0;padding:1px;border-radius:15px;background:linear-gradient(90deg,#6a00f4,#00ddeb);mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask-composite:xor;z-index:-1}
-        .card.elite::before{background:linear-gradient(90deg,#FFD700,#FFA500)}
-        .card:hover{transform:translateY(-10px)}
-        .card i{font-size:2rem;margin-bottom:10px;background:linear-gradient(90deg,#6a00f4,#00ddeb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:2}
-        .card.gold i{background:none;color:#FFD700;animation:sparkle 2s infinite;position:relative}
-        @keyframes sparkle{0%,100%{opacity:1;transform:rotate(0)}50%{opacity:.8;transform:rotate(180deg)}}
-        .card .testimonial-img{position:absolute;top:10px;left:10px;width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #6a00f4}
-        .elite-title{background:linear-gradient(90deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .trident-wrap{position:relative;display:inline-block;margin-bottom:10px}
-        .trident{font-size:2rem;color:#FFD700;display:inline-block}
-        /* Removidas as partículas do tridente */
-        .gradient-button{display:inline-block;background:linear-gradient(90deg,#6a00f4,#00ddeb);color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;margin-top:20px;transition:transform .3s}
-        .gradient-button:hover{transform:scale(1.05)}
-        section{padding:60px 5%;min-height:auto} /* Alterado para auto para melhor ajuste */
-        section h2{font-size:2.5rem;text-align:center;margin-bottom:20px}
-        section .subtitle{font-size:1.2rem;text-align:center;margin-bottom:40px;color:var(--text-color)}
-        .cards-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:20px}
-        #marketing{background:var(--section-bg);padding:60px 5% 40px} /* Ajuste no padding */
-        #servicos{background:var(--bg-color);padding:60px 5% 40px} /* Ajuste no padding */
-        #portfolio{background:var(--section-bg);text-align:center;padding:60px 5% 40px} /* Ajuste no padding */
-        #portfolio img{width:100%;max-width:800px;border-radius:10px;margin:0 auto;display:block}
-        #portfolio .gradient-button{margin:20px auto;display:block;width:fit-content}
-        #depoimentos{background:var(--bg-color);text-align:center;padding:60px 5% 40px} /* Ajuste no padding */
-        #cta{background:linear-gradient(to bottom,#4B0082,#00008B);text-align:center;position:relative;overflow:hidden;min-height:240px;padding:40px 5%}
-        #cta canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:auto;z-index:0}
-        #cta h2{color:#fff;position:relative;z-index:2;margin-bottom:20px}
-        #cta .cta-button{background:rgba(255,255,255,.2);backdrop-filter:blur(5px);color:#fff;padding:15px 30px;border-radius:50px;text-decoration:none;transition:background .3s;position:relative;z-index:2}
-        #cta .cta-button:hover{background:rgba(255,255,255,.3)}
-        footer{background:var(--bg-color);text-align:center;padding:20px;font-size:.8rem}
-        
-        /* Botão de alternância de tema */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Estilos base e gradiente de fundo */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4b0082 0%, #00008b 100%);
+            color: #fff;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
         }
-        .theme-toggle:hover {
-            transform: scale(1.1);
+
+        /* Estilo para a imagem */
+        .logo {
+            max-width: 100px;
+            margin-bottom: 15px;
         }
-        .theme-toggle i {
-            font-size: 1.2rem;
-            color: var(--text-color);
+
+        /* Animação de partículas */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
-        body.light-mode .theme-toggle {
-            background: rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.2);
+
+        .particle {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: moveParticle 10s infinite;
+        }
+
+        @keyframes moveParticle {
+            0% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(1);
+            }
+            100% {
+                transform: translate(calc(var(--x) + var(--dx) * 2), calc(var(--y) + var(--dy) * 2)) scale(0);
+                opacity: 0;
+            }
         }
         
-        @media(max-width:768px){#banner h1{font-size:2rem}#banner p{font-size:1rem}section h2{font-size:2rem}}
+        /* Botão estilizado */
+        .mightx-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background-color: #000080;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 20px #00f;
+            transition: all 0.3s ease;
+        }
+
+        .mightx-btn:hover {
+            background-color: #0000a0;
+            box-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 40px #00f, 0 0 80px #00f;
+            transform: translateY(-2px);
+        }
+
+        /* Otimização para dispositivos móveis */
+        .card {
+            background: #222;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        input, button {
+            width: 90%;
+            box-sizing: border-box;
+        }
+        
+        .tabs {
+            flex-direction: row;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab-btn {
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Estilos do seu código original */
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            transition: 0.3s;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .msg {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: #333;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .codigo-box {
+            margin-top: 10px;
+            background: #333;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <!-- Botão de alternância de tema -->
-    <button class="theme-toggle" id="theme-toggle">
-        <i class="fas fa-moon"></i>
-    </button>
 
-    <!-- Menu Button -->
-    <div class="menu-button">
-        <img src="https://github.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/raw/main/icon.png" alt="MightX Logo" id="logo-btn">
-        <div class="menu-options" id="menu-options">
-            <a href="https://api.whatsapp.com/send/?phone=%2B5533984067438&text&type=phone_number&app_absent=0" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://www.instagram.com/mightx_official/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://francodocess.my.canva.site/portfolio-mightx" target="_blank"><i class="fas fa-briefcase"></i></a>
+    <a href="https://www.mightx.com.br" class="mightx-btn">Tela Inicial</a>
+
+    <div class="particles" id="particles-js"></div>
+
+    <div class="card">
+        <!-- Imagem adicionada aqui -->
+        <img src="https://raw.githubusercontent.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/main/icon.png" alt="MightX Logo" class="logo">
+        <h2>MightX Indicações</h2>
+
+        <div class="tabs">
+            <div id="tabRegistrarBtn" class="tab-btn active" onclick="mudarAba('registrar')">Registrar</div>
+            <div id="tabReivindicarBtn" class="tab-btn" onclick="mudarAba('reivindicar')">Reivindicar</div>
+        </div>
+
+        <div id="registrar" class="tab-content active">
+            <input type="text" id="nome" placeholder="Nome completo">
+            <input type="text" id="instagram" placeholder="@instagram">
+            <button onclick="registrarCodigo()">Gerar Código</button>
+            <div id="mensagemRegistrar" class="msg"></div>
+            <div id="codigoBox" class="codigo-box" style="display:none;">
+                <span id="codigoGerado"></span><br>
+                <button onclick="copiarCodigo()">Copiar Código</button>
+                <p id="msgCopiar" style="font-size:0.9rem; margin-top:5px;"></p>
+            </div>
+        </div>
+
+        <div id="reivindicar" class="tab-content">
+            <input type="text" id="codigoReivindicar" placeholder="Código de indicação">
+            <input type="text" id="instagramReivindicar" placeholder="Seu @instagram">
+            <button onclick="reivindicarCodigo()">Validar</button>
+            <div id="mensagemReivindicar" class="msg"></div>
         </div>
     </div>
 
-    <!-- WhatsApp Button -->
-    <a href="https://api.whatsapp.com/send/?phone=%2B5533984067438&text&type=phone_number&app_absent=0" target="_blank" class="whatsapp-button">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <!-- Banner -->
-    <section id="banner" class="scroll-reveal">
-        <div class="content">
-            <h1>Sua empresa<br>não é só mais uma.<br><span class="gradient-title">E seu marketing<br>também não pode ser.</span></h1>
-            <p>Onde a ciência do marketing encontra a filosofia da persuasão. A MightX constrói sua autoridade (Ethos), conecta-se com a sua audiência (Pathos) e transforma a sua mensagem em resultados indiscutíveis (Logos).</p>
-        </div>
-    </section>
-
-    <!-- Sobre Nós -->
-    <section id="sobre-nos" class="scroll-reveal">
-        <h2 class="gradient-title">Sobre Nós</h2>
-        <div class="cards-container">
-            <div class="card">
-                <i class="fas fa-lightbulb"></i>
-                <h3 class="gradient-title">O que é MightX?</h3>
-                <p>A MightX Ascensão Digital & Criativa é uma agência localizada em Ipanema, MG, dedicada a transformar suas ideias em realidade visual. Com uma equipe apaixonada e experiente, a MightX oferece uma ampla gama de serviços digitais, cono foco na criação de conteúdo e estratégias de marketing que ajudam empresas e indivíduos a aprimorar sua presença digital.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-gem"></i>
-                <h3 class="gradient-title">Nossos Diferenciais</h3>
-                <p>O que nos destaca é o nosso compromisso com a qualidade e o profissionalismo. Utilizamos ferramentas avançadas e contamos com profissionais experientes para garantir que cada projeto atenda aos altos padrões que nossos clientes esperam. Além disso, cada cliente recebe estratégias adaptadas às suas necessidades, assegurando resultados que superam expectativas. Acompanhamos o desemponho de nossas campanhas através de análise de dados, permitindo ajustes que maximizam o retorno sobre investimento (ROI).</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-user"></i>
-                <h3 class="gradient-title">Público-Alvo</h3>
-                <p>Atendemos uma variedade de clientes, incluindo pequenas e médias empresas, empreendedores, influenciadores e freelancers que desejam se destacar no meio digital. Se você busca vídeos de alta qualidade, designs impactantes ou uma gestão estratégica de redes sociais, a MightX está aqui para ajudar.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Marketing -->
-    <section id="marketing" class="scroll-reveal">
-        <h2 class="gradient-title">Marketing</h2>
-        <div class="cards-container">
-            <div class="card">
-                <i class="fas fa-leaf"></i>
-                <h3 class="gradient-title">Pacote Iniciante</h3>
-                <p>1-2 posts por semana</p>
-                <p>1-2 reels por semana</p>
-                <p>Gerenciamento de Rede Social</p>
-                <p>Criação de Artes Profissionais</p>
-                <p>Suporte Personalizado</p>
-                <p><s>R$330</s> por apenas <strong>R$299,90</strong><br><span>9,12% OFF</span></p>
-            </div>
-            <div class="card">
-                <i class="fas fa-shield-alt"></i>
-                <h3 class="gradient-title">Pacote Avançado</h3>
-                <p>2-3 posts por semana</p>
-                <p>2-3 reels por semana</p>
-                <p>Gerenciamento de Rede Social</p>
-                <p>Criação de Artes Profissionais</p>
-                <p>Análise de Métricas</p>
-                <p>Suporte Personalizado</p>
-                <p><s>R$450</s> por apenas <strong>R$399,90</strong><br><span>11,13% OFF</span></p>
-            </div>
-            <div class="card gold elite">
-                <div class="trident-wrap">
-                    <span class="trident">🔱</span>
-                    <!-- Partículas removidas -->
-                </div>
-                <h3 class="elite-title">Pacote Elite</h3>
-                <p>4-7 posts por semana</p>
-                <p>4-7 reels por semana</p>
-                <p>Gerenciamento de Rede Social</p>
-                <p>Planejamento Estratégico</p>
-                <p>Criação de Artes Profissionais</p>
-                <p>Análise de Métricas</p>
-                <p>Suporte Personalizado</p>
-                <p><s>R$910</s> por apenas <strong>R$699,90</strong><br><span>23,09% OFF</span></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Outros Serviços -->
-    <section id="servicos" class="scroll-reveal">
-        <h2 class="gradient-title">Outros Serviços</h2>
-        <div class="cards-container">
-            <div class="card">
-                <i class="fas fa-video"></i>
-                <h3 class="gradient-title">Edição de Vídeo</h3>
-                <p>Nós transformaremos suas gravações brutas em materiais de alta qualidade.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-paint-brush"></i>
-                <h3 class="gradient-title">Design Gráfico</h3>
-                <p>Dê vida às suas ideias através do Design Gráfico, dê total liberdade à sua criatividade.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-bullhorn"></i>
-                <h3 class="gradient-title">Tráfego Pago</h3>
-                <p>Impulsione significativamente as suas vendas e engajamento através do tráfego pago.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfólio -->
-    <section id="portfolio" class="scroll-reveal">
-        <h2 class="gradient-title">Portfólio</h2>
-        <img src="https://raw.githubusercontent.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/main/Portf%C3%B3lio%20MightX.png" alt="Portfólio MightX">
-        <a href="https://francodocess.my.canva.site/portfolio-mightx" target="_blank" class="gradient-button">Visualizar</a>
-    </section>
-
-    <!-- Depoimentos -->
-    <section id="depoimentos" class="scroll-reveal">
-        <h2 class="gradient-title">Depoimentos</h2>
-        <p class="subtitle">Veja o que os nossos clientes dizem</p>
-        <div class="cards-container">
-            <div class="card">
-                <img src="https://github.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/raw/main/clipemania.jpeg" alt="Clipe Mania" class="testimonial-img">
-                <h3 class="gradient-title">Clipe Mania P.</h3>
-                <p class="instagram"><i class="fab fa-instagram"></i> @clipemaniapapelaria</p>
-                <h4 class="gradient-title">Responsabilidade</h4>
-                <p>Sempre que possível, indicamos a MightX para nossos clientes e estamos satisfeitos com o seu profissionalismo e comprometimento.</p>
-            </div>
-            <div class="card">
-                <img src="https://github.com/mightxwebdzn-web/MightX-Ascens-o-Digital-Criativa/raw/main/edmar.jpg" alt="Edmar da Costa" class="testimonial-img">
-                <h3 class="gradient-title">Edmar da Costa</h3>
-                <p class="instagram"><i class="fab fa-instagram"></i> @cantinhobeerrustic</p>
-                <h4 class="gradient-title">Qualidade e Criatividade</h4>
-                <p>Muito bom! Pegaram a minha ideia e me entregaram de forma rápida e eficiente!</p>
-            </div>
-        </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSePcVlD_37cn0umPlm7l2KpkTDwekHm1kdrMiqegkSM9BqZkw/viewform" target="_blank" class="gradient-button">Enviar Depoimento</a>
-    </section>
-
-    <!-- New Section (particles canvas) -->
-    <section id="cta" class="scroll-reveal">
-        <canvas data-particle-animation></canvas>
-        <h2>Confie em quem entende, sinta o poder da transformação e escolha com a razão.</h2>
-        <a href="https://api.whatsapp.com/send/?phone=%2B5533984067438&text&type=phone_number&app_absent=0" target="_blank" class="cta-button">Fale Conosco</a>
-    </section>
-
-    <footer>© 2025 MightX Ascensão Digital & Criativa.</footer>
-
     <script>
-        // Radial Menu Toggle (simple horizontal)
-        const menuButton = document.querySelector('.menu-button');
-        const logoBtn = document.getElementById('logo-btn');
-        const menuOptions = document.getElementById('menu-options');
-        let menuOpen = false;
-        logoBtn.addEventListener('click', (e) => { e.stopPropagation(); menuOpen = !menuOpen; menuOptions.classList.toggle('active', menuOpen); });
-        document.addEventListener('click', (e) => { if(menuOpen && !menuButton.contains(e.target)){ menuOpen=false; menuOptions.classList.remove('active'); } });
+        // URL do seu backend. Se estiver rodando no seu computador, é 127.0.0.1
+        const API_URL = "https://mightxwebdzn.pythonanywhere.com";
 
-        // Scroll reveal using IntersectionObserver
-        const scrollReveals = document.querySelectorAll('.scroll-reveal');
-        const observer = new IntersectionObserver((entries)=>{ entries.forEach(entry=>{ if(entry.isIntersecting) entry.target.classList.add('active'); }); }, { threshold: .12 });
-        scrollReveals.forEach(el=>observer.observe(el));
-
-        // ---------------------
-        // Particle animation (fixed issues)
-        // - mouse coords are now canvas-relative (top-left)
-        // - circles generated once and reused
-        // - draw uses x + translateX without messing context transform
-        // - canvas scaled for devicePixelRatio once on resize
-        // ---------------------
-        class ParticleAnimation {
-          constructor(el, opts={}){
-            this.canvas = el;
-            if(!this.canvas) return;
-            this.ctx = this.canvas.getContext('2d');
-            this.dpr = window.devicePixelRatio || 1;
-            this.opts = Object.assign({ quantity: 60, ease: 12, maxSpeed: 0.5 }, opts);
-            this.circles = [];
-            this.mouse = { x: -9999, y: -9999 };
-            this.resize = this.resize.bind(this);
-            this.onMove = this.onMove.bind(this);
-            this.animate = this.animate.bind(this);
-            this.init();
-          }
-
-          init(){
-            this.resize();
-            window.addEventListener('resize', this.resize);
-            window.addEventListener('mousemove', this.onMove);
-            this.animate();
-          }
-
-          resize(){
-            const rect = this.canvas.getBoundingClientRect();
-            this.width = Math.max(200, Math.floor(rect.width));
-            this.height = Math.max(120, Math.floor(rect.height));
-            this.canvas.width = this.width * this.dpr;
-            this.canvas.height = this.height * this.dpr;
-            this.canvas.style.width = this.width + 'px';
-            this.canvas.style.height = this.height + 'px';
-            this.ctx.setTransform(this.dpr,0,0,this.dpr,0,0);
-
-            // (re)populate circles
-            this.circles.length = 0;
-            for(let i=0;i<this.opts.quantity;i++){
-              this.circles.push(this._createCircle());
-            }
-          }
-
-          _createCircle(){
-            return {
-              x: Math.random()*this.width,
-              y: Math.random()*this.height,
-              size: (Math.random()*2)+0.6,
-              alpha: 0,
-              targetAlpha: 0.15 + Math.random()*0.6,
-              vx: (Math.random()-0.5)*this.opts.maxSpeed,
-              vy: (Math.random()-0.5)*this.opts.maxSpeed,
-              translateX:0,
-              translateY:0,
-              magnet: 40 + Math.random()*120
-            };
-          }
-
-          onMove(e){
-            const rect = this.canvas.getBoundingClientRect();
-            this.mouse.x = (e.clientX - rect.left);
-            this.mouse.y = (e.clientY - rect.top);
-          }
-
-          clear(){ this.ctx.clearRect(0,0,this.width,this.height); }
-
-          animate(){
-            this.clear();
-            for(let i=0;i<this.circles.length;i++){
-              const c = this.circles[i];
-              // basic movement
-              c.x += c.vx; c.y += c.vy;
-              if(c.x < -10) c.x = this.width + 10;
-              if(c.x > this.width+10) c.x = -10;
-              if(c.y < -10) c.y = this.height + 10;
-              if(c.y > this.height+10) c.y = -10;
-
-              // alpha ease towards target if near edges
-              const edgeDist = Math.min(c.x, this.width - c.x, c.y, this.height - c.y);
-              const edgeFactor = Math.max(0, Math.min(1, (edgeDist / 60)));
-              c.alpha = c.targetAlpha * edgeFactor;
-
-              // mouse interaction (repel)
-              const dx = c.x - this.mouse.x;
-              const dy = c.y - this.mouse.y;
-              const dist = Math.sqrt(dx*dx + dy*dy);
-              if(dist < c.magnet){
-                // move slightly away from mouse
-                const force = (1 - (dist / c.magnet)) * 8;
-                c.translateX += (dx/dist) * force * 0.6;
-                c.translateY += (dy/dist) * force * 0.6;
-              } else {
-                // relax translation back to zero
-                c.translateX += (0 - c.translateX)/this.opts.ease;
-                c.translateY += (0 - c.translateY)/this.opts.ease;
-              }
-
-              // draw
-              this.ctx.beginPath();
-              this.ctx.arc(c.x + c.translateX, c.y + c.translateY, c.size, 0, Math.PI*2);
-              this.ctx.fillStyle = `rgba(255,255,255,${c.alpha})`;
-              this.ctx.fill();
-            }
-            requestAnimationFrame(this.animate);
-          }
+        // --- Alternar abas (código original mantido) ---
+        function mudarAba(aba) {
+            document.querySelectorAll(".tab-content").forEach(div => div.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.getElementById(aba).classList.add("active");
+            document.getElementById("tab" + aba.charAt(0).toUpperCase() + aba.slice(1) + "Btn").classList.add("active");
         }
 
-        // initialize particle canvas(es)
-        document.querySelectorAll('[data-particle-animation]').forEach(canvas=>{
-          // ensure canvas fills parent
-          canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
-          new ParticleAnimation(canvas, { quantity: 80, ease: 14, maxSpeed: 0.6 });
-        });
+        // --- Função para registrar código (NOVO) ---
+        async function registrarCodigo() {
+            const nome = document.getElementById("nome").value.trim();
+            const insta = document.getElementById("instagram").value.trim();
+            const msg = document.getElementById("mensagemRegistrar");
+            const codigoBox = document.getElementById("codigoBox");
+            const codigoSpan = document.getElementById("codigoGerado");
 
-        // Toggle de tema claro/escuro
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Verificar si hay una preferencia guardada
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            
-            if (document.body.classList.contains('light-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'light');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'dark');
+            if (!nome || !insta) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Preencha todos os campos.";
+                codigoBox.style.display = "none";
+                return;
             }
-        });
 
+            // A lógica de geração de código é mantida no frontend para mostrar o código
+            const primeiroNome = nome.split(" ")[0].toUpperCase();
+            const aleatorio = Math.floor(100 + Math.random() * 900);
+            const codigo = `MIGHTX-${primeiroNome}-${aleatorio}`;
+
+            try {
+                const response = await fetch(`${API_URL}/registrar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, instagram: insta, codigo })
+                });
+                const result = await response.json();
+
+                if (response.ok) { // Verifica se a resposta foi bem-sucedida (código 200-299)
+                    msg.style.color = "lime";
+                    msg.innerText = "✅ Código gerado com sucesso!";
+                    codigoSpan.innerText = codigo;
+                    codigoBox.style.display = "block";
+                } else {
+                    msg.style.color = "red";
+                    msg.innerText = `❌ ${result.message}`;
+                    codigoBox.style.display = "none";
+                }
+            } catch (error) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+                codigoBox.style.display = "none";
+            }
+        }
+
+        // --- Função para copiar código (mantida) ---
+        function copiarCodigo() {
+            const codigo = document.getElementById("codigoGerado").innerText;
+            const msgCopiar = document.getElementById("msgCopiar");
+
+            navigator.clipboard.writeText(codigo).then(() => {
+                msgCopiar.style.color = "lime";
+                msgCopiar.innerText = "📋 Código copiado!";
+            }).catch(() => {
+                msgCopiar.style.color = "red";
+                msgCopiar.innerText = "❌ Erro ao copiar!";
+            });
+        }
+
+        // --- Função para reivindicar código (NOVO) ---
+        async function reivindicarCodigo() {
+            const codigo = document.getElementById("codigoReivindicar").value.trim();
+            const instaReivindicador = document.getElementById("instagramReivindicar").value.trim();
+            const msg = document.getElementById("mensagemReivindicar");
+
+            if (!codigo || !instaReivindicador) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Preencha todos os campos.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/reivindicar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo, instagramReivindicador: instaReivindicador })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    msg.style.color = "lime";
+                    msg.innerText = `✅ ${result.message}`;
+                } else {
+                    msg.style.color = "red";
+                    msg.innerText = `❌ ${result.message}`;
+                }
+            } catch (error) {
+                msg.style.color = "red";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+            }
+        }
+
+        // --- Gerador de partículas (mantido) ---
+        function createParticles() {
+            const container = document.getElementById('particles-js');
+            const numParticles = 50;
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                particle.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--dx', `${Math.random() * 100 - 50}px`);
+                particle.style.setProperty('--dy', `${Math.random() * 100 - 50}px`);
+                container.appendChild(particle);
+            }
+        }
+        window.onload = createParticles;
     </script>
 </body>
 </html>
