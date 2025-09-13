@@ -1,6 +1,6 @@
 import json
 import os
-import requests  # Added for Mailgun API
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -11,15 +11,22 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-DB_FILE = 'codigos.json'
+# Configurações através de variáveis de ambiente
+DB_FILE = os.getenv('DB_FILE', 'codigos.json')
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
+MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN')
+EMAIL_RECEIVER = os.getenv('EMAIL_RECEIVER')
 
 def load_codes():
     """Carrega os códigos e dados de indicação do arquivo JSON."""
     if not os.path.exists(DB_FILE):
         return []
     
-    with open(DB_FILE, 'r') as f:
-        data = json.load(f)
+    try:
+        with open(DB_FILE, 'r') as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
     # Garante que a lista de reivindicadores existe para cada código
     for code_data in data:
@@ -34,9 +41,12 @@ def save_codes(codes):
         json.dump(codes, f, indent=4)
 
 def send_email_notification(codigo, dono_codigo, indicado):
+    """Envia uma notificação por e-mail sobre um código validado usando Mailgun."""
     try:
-        API_KEY = "822243467f8e5e9023bfd1cef6a4a8e2-fbceb7cb-7496d9da"
-        DOMAIN = "sandboxf9a7a3a6584a43d2a8c1019020eb838f.mailgun.org"
+        # Verifica se as configurações do Mailgun estão definidas
+        if not all([MAILGUN_API_KEY, MAILGUN_DOMAIN, EMAIL_RECEIVER]):
+            print("❌ Configurações de e-mail não encontradas. Verifique suas variáveis de ambiente.")
+            return False
         
         # Cria a mensagem com o formato desejado
         email_body = (
@@ -45,18 +55,24 @@ def send_email_notification(codigo, dono_codigo, indicado):
             f"Código usado por: @{indicado}"
         )
         
-        requests.post(
-            f"https://api.mailgun.net/v3/{DOMAIN}/messages",
-            auth=("api", API_KEY),
+        response = requests.post(
+            f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
+            auth=("api", MAILGUN_API_KEY),
             data={
-                "from": f"Notificador MightX <mailgun@{DOMAIN}>",
-                "to": ["miguelitoadventures@gmail.com"],
+                "from": f"Notificador MightX <mailgun@{MAILGUN_DOMAIN}>",
+                "to": [EMAIL_RECEIVER],
                 "subject": f"Novo código de indicação usado por @{indicado}",
                 "text": email_body,
-            }
+            },
+            timeout=10  # Timeout para evitar que a requisição fique travada
         )
-        print("✅ E-mail de notificação enviado com sucesso via Mailgun!")
-        return True
+        
+        if response.status_code == 200:
+            print("✅ E-mail de notificação enviado com sucesso via Mailgun!")
+            return True
+        else:
+            print(f"❌ Erro ao enviar o e-mail: {response.status_code} - {response.text}")
+            return False
     except Exception as e:
         print(f"❌ Erro ao enviar o e-mail com Mailgun: {e}")
         return False
@@ -87,7 +103,7 @@ def registrar_codigo():
         "nome": nome,
         "insta": insta,
         "codigo": codigo,
-        "reivindicadores_usados": [] # Nova lista para registrar quem usou o código
+        "reivindicadores_usados": []
     })
     save_codes(codes)
 
@@ -124,7 +140,7 @@ def reivindicar_codigo():
     if insta_reivindicador in encontrado.get('reivindicadores_usados', []):
         return jsonify({"success": False, "message": "Você já utilizou este código."}), 409
 
-    # Adiciona o Instagram do novo reivindicador à lista (corrigido o nome do campo)
+    # Adiciona o Instagram do novo reivindicador à lista
     encontrado['reivindicadores_usados'].append(insta_reivindicador)
     save_codes(codes)
 
@@ -134,4 +150,12 @@ def reivindicar_codigo():
     return jsonify({"success": True, "message": "Código validado com sucesso! E-mail de confirmação enviado."}), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8001, debug=True)
+    # Verifica se as variáveis de ambiente necessárias estão definidas
+    required_env_vars = ['MAILGUN_API_KEY', 'MAILGUN_DOMAIN', 'EMAIL_RECEIVER']
+    missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+    
+    if missing_vars:
+        print(f"❌ Variáveis de ambiente ausentes: {', '.join(missing_vars)}")
+        print("⚠️  Certifique-se de configurar um arquivo .env com todas as variáveis necessárias")
+    
+    app.run(host='0.0.0.0', port=8001, debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true')
