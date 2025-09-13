@@ -134,4 +134,4 @@ def reivindicar_codigo():
     return jsonify({"success": True, "message": "Código validado com sucesso! E-mail de confirmação enviado."}), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8001, debug=True)
