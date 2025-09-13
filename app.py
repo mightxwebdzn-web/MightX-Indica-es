@@ -1,7 +1,6 @@
 import json
 import os
-import smtplib
-from email.mime.text import MIMEText
+import requests  # Added for Mailgun API
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -13,10 +12,6 @@ app = Flask(__name__)
 CORS(app)
 
 DB_FILE = 'codigos.json'
-
-EMAIL_SENDER = os.getenv('EMAIL_SENDER')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-EMAIL_RECEIVER = 'mightxwebdzn@gmail.com'
 
 def load_codes():
     """Carrega os códigos e dados de indicação do arquivo JSON."""
@@ -39,20 +34,31 @@ def save_codes(codes):
         json.dump(codes, f, indent=4)
 
 def send_email_notification(codigo, dono_codigo, indicado):
-    """Envia uma notificação por e-mail sobre um código validado."""
     try:
-        msg = MIMEText(f'O código {codigo} de @{dono_codigo} foi utilizado por @{indicado}.')
-        msg['Subject'] = f'Novo código de indicação usado por @{indicado}'
-        msg['From'] = EMAIL_SENDER
-        msg['To'] = EMAIL_RECEIVER
-
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            smtp.send_message(msg)
-            print("✅ E-mail de notificação enviado com sucesso!")
+        API_KEY = "822243467f8e5e9023bfd1cef6a4a8e2-fbceb7cb-7496d9da"
+        DOMAIN = "sandboxf9a7a3a6584a43d2a8c1019020eb838f.mailgun.org"
+        
+        # Cria a mensagem com o formato desejado
+        email_body = (
+            f"Novo código validado! Confere aí no painel.\n"
+            f"Criador do código: @{dono_codigo}\n"
+            f"Código usado por: @{indicado}"
+        )
+        
+        requests.post(
+            f"https://api.mailgun.net/v3/{DOMAIN}/messages",
+            auth=("api", API_KEY),
+            data={
+                "from": f"Notificador MightX <mailgun@{DOMAIN}>",
+                "to": ["miguelitoadventures@gmail.com"],
+                "subject": f"Novo código de indicação usado por @{indicado}",
+                "text": email_body,
+            }
+        )
+        print("✅ E-mail de notificação enviado com sucesso via Mailgun!")
         return True
     except Exception as e:
-        print(f"❌ Erro ao enviar o e-mail: {e}")
+        print(f"❌ Erro ao enviar o e-mail com Mailgun: {e}")
         return False
 
 @app.route('/registrar', methods=['POST'])
@@ -114,11 +120,11 @@ def reivindicar_codigo():
     if encontrado['insta'] == insta_reivindicador:
         return jsonify({"success": False, "message": "Você não pode usar seu próprio código."}), 403
 
-    # NOVO: Verifica se o reivindicador já usou este código
+    # Verifica se o reivindicador já usou este código
     if insta_reivindicador in encontrado.get('reivindicadores_usados', []):
         return jsonify({"success": False, "message": "Você já utilizou este código."}), 409
 
-    # Adiciona o Instagram do novo reivindicador à lista
+    # Adiciona o Instagram do novo reivindicador à lista (corrigido o nome do campo)
     encontrado['reivindicadores_usados'].append(insta_reivindicador)
     save_codes(codes)
 
@@ -128,4 +134,4 @@ def reivindicar_codigo():
     return jsonify({"success": True, "message": "Código validado com sucesso! E-mail de confirmação enviado."}), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
