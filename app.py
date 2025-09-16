@@ -4,6 +4,7 @@ import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -13,6 +14,7 @@ CORS(app)
 
 # Configurações através de variáveis de ambiente
 DB_FILE = os.getenv('DB_FILE', 'codigos.json')
+LEADS_FILE = os.getenv('LEADS_FILE', 'leads.json')
 MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
 MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN')
 EMAIL_RECEIVER = os.getenv('EMAIL_RECEIVER')
@@ -39,6 +41,24 @@ def save_codes(codes):
     """Salva os códigos e dados de indicação no arquivo JSON."""
     with open(DB_FILE, 'w') as f:
         json.dump(codes, f, indent=4)
+
+def load_leads():
+    """Carrega os leads do arquivo JSON."""
+    if not os.path.exists(LEADS_FILE):
+        return []
+    
+    try:
+        with open(LEADS_FILE, 'r') as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+    
+    return data
+
+def save_leads(leads):
+    """Salva os leads no arquivo JSON."""
+    with open(LEADS_FILE, 'w') as f:
+        json.dump(leads, f, indent=4)
 
 def send_email_notification(codigo, dono_codigo, indicado):
     """Envia uma notificação por e-mail sobre um código validado usando Mailgun."""
@@ -68,13 +88,53 @@ def send_email_notification(codigo, dono_codigo, indicado):
         )
         
         if response.status_code == 200:
-            print("✅ E-mail de notificação enviado com sucesso via Mailgun!")
+            print("✅ E-mail de notificação enviado com sucesso!")
             return True
         else:
             print(f"❌ Erro ao enviar o e-mail: {response.status_code} - {response.text}")
             return False
     except Exception as e:
-        print(f"❌ Erro ao enviar o e-mail com Mailgun: {e}")
+        print(f"❌ Erro ao enviar o e-mail de verificação: {e}")
+        return False
+
+def send_lead_notification(lead_data):
+    """Envia uma notificação por e-mail sobre um novo lead capturado."""
+    try:
+        # Verifica se as configurações do Mailgun estão definidas
+        if not all([MAILGUN_API_KEY, MAILGUN_DOMAIN, EMAIL_RECEIVER]):
+            print("❌ Configurações de e-mail não encontradas. Verifique suas variáveis de ambiente.")
+            return False
+        
+        # Cria a mensagem com os dados do lead
+        email_body = (
+            f"Novo lead capturado no site!\n\n"
+            f"Nome: {lead_data.get('name', 'Não informado')}\n"
+            f"E-mail: {lead_data.get('email', 'Não informado')}\n"
+            f"Telefone: {lead_data.get('phone', 'Não informado')}\n"
+            f"Mensagem: {lead_data.get('message', 'Não informada')}\n\n"
+            f"Data: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
+        )
+        
+        response = requests.post(
+            f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
+            auth=("api", MAILGUN_API_KEY),
+            data={
+                "from": f"Sistema de Leads MightX <leads@{MAILGUN_DOMAIN}>",
+                "to": [EMAIL_RECEIVER],
+                "subject": f"Novo lead: {lead_data.get('name', 'Cliente Potencial')}",
+                "text": email_body,
+            },
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            print("✅ Solicitação Enviada!")
+            return True
+        else:
+            print(f"❌ Erro ao enviar o e-mail de lead: {response.status_code} - {response.text}")
+            return False
+    except Exception as e:
+        print(f"❌ Erro ao enviar solicitação: {e}")
         return False
 
 @app.route('/registrar', methods=['POST'])
@@ -148,6 +208,49 @@ def reivindicar_codigo():
     send_email_notification(codigo, encontrado['insta'], insta_reivindicador)
 
     return jsonify({"success": True, "message": "Código validado com sucesso! E-mail de confirmação enviado."}), 200
+
+@app.route('/leads', methods=['POST'])
+def capturar_lead():
+    """
+    Rota para capturar leads do formulário do site.
+    Recebe: JSON com 'name', 'email', 'phone' e 'message' (opcional).
+    Retorna: Mensagem de sucesso ou erro.
+    """
+    data = request.json
+    if not data:
+        return jsonify({"success": False, "message": "Dados não enviados."}), 400
+
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    message = data.get('message', '')
+
+    if not name or not email or not phone:
+        return jsonify({"success": False, "message": "Preencha todos os campos obrigatórios."}), 400
+
+    # Carrega os leads existentes
+    leads = load_leads()
+    
+    # Verifica se o e-mail já existe
+    if any(lead['email'].lower() == email.lower() for lead in leads):
+        return jsonify({"success": False, "message": "Este e-mail já está cadastrado."}), 409
+
+    # Adiciona o novo lead
+    new_lead = {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "message": message,
+        "timestamp": datetime.now().isoformat()
+    }
+    
+    leads.append(new_lead)
+    save_leads(leads)
+
+    # Envia a notificação por e-mail
+    send_lead_notification(new_lead)
+
+    return jsonify({"success": True, "message": "Entraremos em contato em breve."}), 201
 
 if __name__ == '__main__':
     # Verifica se as variáveis de ambiente necessárias estão definidas
