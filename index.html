@@ -250,7 +250,7 @@
                 }
             } catch (error) {
                 msg.style.color = "red";
-                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique si o backend está rodando.";
                 codigoBox.style.display = "none";
             }
         }
@@ -269,7 +269,7 @@
             });
         }
 
-        // --- Função para reivindicar código (NOVO) ---
+        // --- Função para reivindicar código (MODIFICADA com redirecionamento) ---
         async function reivindicarCodigo() {
             const codigo = document.getElementById("codigoReivindicar").value.trim();
             const instaReivindicador = document.getElementById("instagramReivindicar").value.trim();
@@ -292,13 +292,18 @@
                 if (response.ok) {
                     msg.style.color = "lime";
                     msg.innerText = `✅ ${result.message}`;
+                    
+                    // Redirecionar após 1 segundo em caso de sucesso
+                    setTimeout(() => {
+                        window.location.href = "https://mightx.com.br/";
+                    }, 1000);
                 } else {
                     msg.style.color = "red";
                     msg.innerText = `❌ ${result.message}`;
                 }
             } catch (error) {
                 msg.style.color = "red";
-                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+                msg.innerText = "❌ Erro ao conectar com o servidor. Verifique si o backend está rodando.";
             }
         }
 
